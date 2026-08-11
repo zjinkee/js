@@ -1,6 +1,6 @@
-let name = "";
-let host = "";
-let key  = "";
+var name = "";
+var host = "";
+var key  = "";
 
 (function () {
     const args = $argument;
@@ -31,7 +31,7 @@ function request(api, num = 1) {
                 request(api, num + 1).then(resolve);
                 return;
             }
-            const log = "请求失败\n" + error;
+            const log = "" + error;
             console.log(log);
             $notification.post("天气通知", "", log);
             $done();
