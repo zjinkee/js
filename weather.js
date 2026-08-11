@@ -16,8 +16,8 @@ function request(api, num = 1) {
         $httpClient.get({
             url: api,
             headers: {
-				"Host": host
-                "X-QW-Api-Key": key
+				"Host": host,
+                "X-QW-Api-Key": key,
 				"Accept": "application/json"
 				"Accept-Encoding": "gzip",
 				"Connection": "keep-alive"
