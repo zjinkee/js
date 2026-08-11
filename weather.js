@@ -1,9 +1,9 @@
-var name = "";
-var host = "";
-var key  = "";
+let name = "";
+let host = "";
+let key  = "";
 
 (function () {
-    var args = $argument;
+    const args = $argument;
     if (args) {
         name = args.name != null ? String(args.name) : name;
         host = args.host != null ? String(args.host) : host;
@@ -18,7 +18,7 @@ function request(api, num = 1) {
             headers: {
 				"Host": host,
                 "X-QW-Api-Key": key,
-				"Accept": "application/json"
+				"Accept": "application/json",
 				"Accept-Encoding": "gzip",
 				"Connection": "keep-alive"
             },
