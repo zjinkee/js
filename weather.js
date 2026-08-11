@@ -21,8 +21,7 @@ function request(api, num = 1) {
 				"Accept": "application/json",
 				"Accept-Encoding": "gzip",
 				"Connection": "keep-alive"
-            },
-            timeout: 3000
+            }
         }, (error, response, body) => {
             if (!error && body) {
                 resolve(JSON.parse(body));
