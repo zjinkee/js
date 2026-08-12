@@ -30,7 +30,7 @@ function request(api, num = 1) {
                 request(api, num + 1).then(resolve);
                 return;
             }
-            const log = "事件" + error;
+            var log = "事件" + error;
             console.log(log);
             $notification.post("天气通知", "", log);
             $done();
@@ -38,40 +38,48 @@ function request(api, num = 1) {
     });
 }
 
+
 (async function () {
 
-    const place = await request(
+    var place = await request(
         `https://${host}/geo/v2/city/lookup?location=${encodeURIComponent(name)}`
     );
-    const weath = await request(
+
+    var w = await request(
         `https://${host}/weather/v1/current/${place.location[0].lat}/${place.location[0].lon}?lang=zh`
     );
 
-    const feel = weath.feelsLike?.value && weath.feelsLike.value != 0
-        ? `体感${weath.feelsLike.value}°`
-        : "";
-	
-    const hmid = weath.humidity && weath.humidity != 0
-        ? `湿度${weath.humidity * 100}%`
-        : "";
-	
-    const wind = weath.wind?.scale && weath.wind.scale != 0
-        ? `风力${weath.wind.scale}级`
-        : "";
-	
-	const rain = weath.precipitation?.amount?.value && weath.precipitation.amount.value != 0
-        ? `${weath.precipitation.amount.value}mm`
-        : "";
+
+    var feel = w.feelsLike?.value ? `体感${Math.round(w.feelsLike.value)}°` : "";
+
+    var hmid = w.humidity ? `湿度${Math.round(w.humidity * 100)}%` : "";
+
+    var wind = w.wind?.scale ? `风力${w.wind.scale}级` : "";
 
 
-    const log = `目前${weath.condition.text}${rain} ${feel} ${hmid} ${wind}`;
-	console.log(log);
-	
-    $notification.post(`${place.location[0].adm2}天气`, "", log, { mediaUrl: icon(weath.condition.text, new Date().getHours())
-    });
+    var rain = "";
+    var p = w.precipitation;
 
+    if (p?.intensity?.value && p.intensity.value != 0) {
+
+        if (p.type == "rain")
+            rain = `降雨强度${p.intensity.value}${p.intensity.unit}`;
+        if (p.type == "snow")
+            rain = `降雪强度${p.intensity.value}${p.intensity.unit}`;
+        if (p.type == "ice")
+            rain = `冻雨强度${p.intensity.value}${p.intensity.unit}`;
+        if (p.type == "mixed")
+            rain = `混合降水${p.intensity.value}${p.intensity.unit}`;
+
+    }
+
+    var log = `${w.condition.text} ${feel} ${hmid} ${wind}${rain ? " " + rain : ""}`;
+
+    console.log(log);
+
+    $notification.post(`${place.location[0].adm2}天气`,"",log,{ mediaUrl: icon(w.condition.text, new Date().getHours()) }
+    );
     $done();
-
 })();
 
 
