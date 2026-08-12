@@ -3,7 +3,7 @@ var host = "";
 var key  = "";
 
 (function () {
-    const args = $argument;
+    var args = $argument;
     if (args) {
         name = args.name != null ? String(args.name) : name;
         host = args.host != null ? String(args.host) : host;
@@ -60,7 +60,7 @@ function request(api, num = 1) {
         ? ` 紫外线${weath.uvIndex}`
         : "";
 		const rain = weath.precipitation?.amount?.value && weath.precipitation.amount.value != 0
-        ? `降雨量${weath.precipitation.amount.value}mm`
+        ? `降雨强度${weath.precipitation.amount.value}mm`
         : "";
 
 
