@@ -48,24 +48,25 @@ function request(api, num = 1) {
     );
 
     const feel = weath.feelsLike?.value && weath.feelsLike.value != 0
-        ? ` 体感${weath.feelsLike.value}°`
+        ? `体感${weath.feelsLike.value}°`
         : "";
+	
     const hmid = weath.humidity && weath.humidity != 0
-        ? ` 湿度${weath.humidity * 100}%`
+        ? `湿度${weath.humidity * 100}%`
         : "";
+	
     const wind = weath.wind?.scale && weath.wind.scale != 0
-        ? ` 风力${weath.wind.scale}级`
+        ? `风力${weath.wind.scale}级`
         : "";
-    const uv = weath.uvIndex && weath.uvIndex != 0
-        ? ` 紫外线${weath.uvIndex}`
-        : "";
-		const rain = weath.precipitation?.amount?.value && weath.precipitation.amount.value != 0
-        ? `降雨强度${weath.precipitation.amount.value}mm`
+	
+	const rain = weath.precipitation?.amount?.value && weath.precipitation.amount.value != 0
+        ? `${weath.precipitation.amount.value}mm`
         : "";
 
 
-    const log = `目前${weath.condition.text}${feel}${hmid}${wind}\n${uv}${rain}`;console.log(log);
-
+    const log = `目前${weath.condition.text}${feel} ${rain} ${hmid} ${wind}`;
+	console.log(log);
+	
     $notification.post(`${place.location[0].adm2}天气`, "", log, { mediaUrl: icon(weath.condition.text, new Date().getHours())
     });
 
