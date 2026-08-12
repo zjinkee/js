@@ -64,7 +64,7 @@ function request(api, num = 1) {
         : "";
 
 
-    const log = `目前${weath.condition.text}${feel} ${rain} ${hmid} ${wind}`;
+    const log = `目前${weath.condition.text}${rain} ${feel} ${hmid} ${wind}`;
 	console.log(log);
 	
     $notification.post(`${place.location[0].adm2}天气`, "", log, { mediaUrl: icon(weath.condition.text, new Date().getHours())
