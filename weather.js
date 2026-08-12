@@ -52,7 +52,7 @@ function request(api, num = 1) {
     );
 	
     const wind = weath.wind.scale && weath.wind.scale != 0 ? ` • 风力${weath.wind.scale}级` : "";		
-	const rain = weath.precipitation?.intensity?.value > 0 ? ` • 降雨强度${weath.precipitation.intensity.value}mm` : "";
+	const rain = weath.precipitation?.amount?.value > 0 ? ` • 降雨量${weath.precipitation.amount.value}mm` : "";
     const warn = alert.alerts && alert.alerts.length ? `${alert.alerts[0].description}` : "";
     const logs = `当前${weath.condition.text} • 体感${Math.round(weath.feelsLike.value)}° • 湿度${Math.round(weath.humidity * 100)}%${wind}${rain}\n${warn}`;
 
