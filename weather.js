@@ -16,7 +16,6 @@ function request(api, num = 1) {
         $httpClient.get({
             url: api,
             headers: {
-				"Host": host,
                 "X-QW-Api-Key": key,
 				"Accept": "application/json",
 				"Accept-Encoding": "gzip",
@@ -51,16 +50,16 @@ function request(api, num = 1) {
         `https://${host}/weatheralert/v1/current/${place.location[0].lat}/${place.location[0].lon}?lang=zh`
     );
 	
-    const wind = weath.wind.scale && weath.wind.scale != 0 ? ` • 风力${weath.wind.scale}级` : "";		
-    const rain = weath.precipitation?.amount?.value > 0 ? ` 降雨量${weath.precipitation.amount.value}mm` : "";
-    const warn = alert.alerts && alert.alerts.length ? `\n${alert.alerts[0].description}` : "";
+    const wind = weath.wind.scale && weath.wind.scale != 0 ? `风力${weath.wind.scale}级` : "";
+		
+    const rain = weath.precipitation?.amount?.value > 0 ? `降雨${weath.precipitation.amount.value}mm` : "";
+
+    const warn = alert.alerts && alert.alerts.length ? `\n${alert.alerts[2].headline}⚠️\n${alert.alerts[2].criteria}` : "";
     
-    const log = `当前${weath.condition.text} • 体感${Math.round(weath.feelsLike.value)}°${wind}${rain}${warn}`;
-   
-	console.log(log);
+    const log = `当前${weath.condition.text}${Math.round(weath.temperature?.value ?? 0)}° 体感${Math.round(weath.feelsLike?.value ?? 0)}° ${wind} ${rain}${warn}`;console.log(log);
 	
-    $notification.post("天气通知", "", log, {
-        mediaUrl: icon(weath.condition.text, new Date().getHours())
+    $notification.post(`${place.location[0].adm2}天气`, "", log, { 
+		mediaUrl: icon(weath.condition.text, new Date().getHours())
     });
 
     $done();
