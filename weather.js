@@ -17,9 +17,9 @@ function request(api, num = 1) {
             url: api,
             headers: {
                 "X-QW-Api-Key": key,
-				"Accept": "application/json",
-				"Accept-Encoding": "gzip",
-				"Connection": "keep-alive"
+                "Accept": "application/json",
+                "Accept-Encoding": "gzip",
+                "Connection": "keep-alive"
             }
         }, (error, response, body) => {
             if (!error && body) {
@@ -46,49 +46,67 @@ function request(api, num = 1) {
     const weath = await request(
         `https://${host}/weather/v1/current/${place.location[0].lat}/${place.location[0].lon}?lang=zh`
     );
-    const alert = await request(
-        `https://${host}/weatheralert/v1/current/${place.location[0].lat}/${place.location[0].lon}?lang=zh`
-    );
-	
-    const wind = weath.wind.scale && weath.wind.scale != 0 ? `风力${weath.wind.scale}级` : "";
-		
-    const rain = weath.precipitation?.amount?.value > 0 ? `降雨${weath.precipitation.amount.value}mm` : "";
 
-    const warn = alert.alerts && alert.alerts.length ? `\n${alert.alerts[2].headline}⚠️\n${alert.alerts[2].criteria}` : "";
-    
-    const log = `当前${weath.condition.text}${Math.round(weath.temperature?.value ?? 0)}° 体感${Math.round(weath.feelsLike?.value ?? 0)}° ${wind} ${rain}${warn}`;console.log(log);
-	
-    $notification.post(`${place.location[0].adm2}天气`, "", log, { 
-		mediaUrl: icon(weath.condition.text, new Date().getHours())
+    const feel = weath.feelsLike?.value && weath.feelsLike.value != 0
+        ? ` 体感${weath.feelsLike.value}°`
+        : "";
+    const hmid = weath.humidity && weath.humidity != 0
+        ? ` 湿度${weath.humidity * 100}%`
+        : "";
+    const wind = weath.wind?.scale && weath.wind.scale != 0
+        ? ` 风力${weath.wind.scale}级`
+        : "";
+    const uv = weath.uvIndex && weath.uvIndex != 0
+        ? ` 紫外线${weath.uvIndex}`
+        : "";
+		const rain = weath.precipitation?.amount?.value && weath.precipitation.amount.value != 0
+        ? `降雨量${weath.precipitation.amount.value}mm`
+        : "";
+
+
+    const log = `目前${weath.condition.text}${feel}${hmid}${wind}\n${uv}${rain}`;console.log(log);
+
+    $notification.post(`${place.location[0].adm2}天气`, "", log, { mediaUrl: icon(weath.condition.text, new Date().getHours())
     });
 
     $done();
 
 })();
 
+
 function icon(text, hour) {
     const night = hour >= 19 || hour < 5;
 
     if (night && /雨|阵雨|小雨|中雨|大雨|暴雨|毛毛雨|细雨/.test(text))
         return "https://help.apple.com/assets/69F8EBBDF3B89A4F6E0C704C/69F8EBC43862495245036393/zh_HK/d4b6596291c114305b64056bd92ccee3.png";
+
     if (night && /晴|晴朗/.test(text))
         return "https://help.apple.com/assets/69F8EBBDF3B89A4F6E0C704C/69F8EBC39FA1A6D6FA0F620C/zh_CN/1200cde3569cf69bd80e1ddabc0f15cd.png";
+
     if (night && /少云|多云|云|阴|阴天/.test(text))
         return "https://help.apple.com/assets/69F8EBBDF3B89A4F6E0C704C/69F8EBC39FA1A6D6FA0F620C/zh_CN/17cc1a8a95028b89ba6988ee47eeab29.png";
+
     if (/雷|雷雨|雷阵雨|强雷雨|雷电/.test(text))
         return "https://help.apple.com/assets/69F8EBBDF3B89A4F6E0C704C/69F8EBC39FA1A6D6FA0F620C/zh_CN/efffb1e26f6de5bf5c8adbd872a2933a.png";
+
     if (/雪|小雪|中雪|大雪|暴雪|阵雪|雨夹雪|冻雨/.test(text))
         return "https://help.apple.com/assets/69F8EBBDF3B89A4F6E0C704C/69F8EBC39FA1A6D6FA0F620C/zh_CN/9189cb49e806d1ebfeed24f33367143c.png";
+
     if (/雨|小雨|中雨|大雨|暴雨|阵雨|毛毛雨|细雨|降雨/.test(text))
         return "https://help.apple.com/assets/69F8EBBDF3B89A4F6E0C704C/69F8EBC39FA1A6D6FA0F620C/zh_CN/451d37e6cea3af4a568110863a1adcf7.png";
+
     if (/雾|霾|轻雾|浓雾|大雾|霭/.test(text))
         return "https://help.apple.com/assets/69F8EBBDF3B89A4F6E0C704C/69F8EBC39FA1A6D6FA0F620C/zh_CN/d35bb25d12281cd9ee5ce78a98cd2aa7.png";
+
     if (/风|大风|狂风|扬沙|沙尘暴/.test(text))
         return "https://help.apple.com/assets/69F8EBBDF3B89A4F6E0C704C/69F8EBC39FA1A6D6FA0F620C/zh_CN/ad9e41c68b6a2671d2bcd843be1baa86.png";
+
     if (/晴|晴朗/.test(text))
         return "https://help.apple.com/assets/69F8EBBDF3B89A4F6E0C704C/69F8EBC39FA1A6D6FA0F620C/zh_CN/575900edccbc7def167f7874c02aeb0b.png";
+
     if (/少云|多云|云|疏云|间晴/.test(text))
         return "https://help.apple.com/assets/69F8EBBDF3B89A4F6E0C704C/69F8EBC39FA1A6D6FA0F620C/zh_CN/67aaf9dbe30989c25cbde6c6ec099213.png";
+
     if (/阴|阴天|阴沉|灰霾/.test(text))
         return "https://help.apple.com/assets/69F8EBBDF3B89A4F6E0C704C/69F8EBC39FA1A6D6FA0F620C/zh_CN/66117fab0f288a2867b340fa2fcde31b.png";
 
