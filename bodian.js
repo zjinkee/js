@@ -98,7 +98,6 @@ if (/api\/play\/music\/v2\/audioUrl/i.test(url)) {
                 if (
                    !error &&
                     mobi.code === 200 &&
-                    mobi.data.type !== 1 &&
                     mobi.data.duration !== 11
                 ) {
                     var data = {
