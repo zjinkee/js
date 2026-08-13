@@ -1,22 +1,23 @@
 var mode = $resourceType;
+
 var keep = "";
 var drop = "";
 var wipe = "";
 var name = "";
 var sort = "";
 var emoji = false;
-var    ua = false;
+var ua = false;
 
 (function parse() {
     var args = $argument;
     if (args) {
         keep = args.keep != null ? String(args.keep) : keep;
-		    drop = args.drop != null ? String(args.drop) : drop;
+		drop = args.drop != null ? String(args.drop) : drop;
         wipe = args.wipe != null ? String(args.wipe) : wipe;
         name = args.name != null ? String(args.name) : name;
-		    sort = args.sort != null ? String(args.sort) : sort;
-	     emoji = args.emoji === true;
-          ua = args.ua === true;
+		sort = args.sort != null ? String(args.sort) : sort;
+	    emoji = args.emoji === true;
+        ua = args.ua === true;
     }
 })();
 
