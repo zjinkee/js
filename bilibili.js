@@ -6,6 +6,7 @@ if (/^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/(list|show|event\/list2)/i.te
     if (obj.data) {
         obj.data.min_interval = 999999;
         obj.data.pull_interval = 999999;
+        obj.data.event_list = [];
         obj.data.show = [{"ad_cb":""}];
         obj.data.list = [{"is_ad":false,"duration":0,"ad_cb":"", "jump_image_url":"", "schema_image_url":""}];
         obj.data.keep_ids = [];
